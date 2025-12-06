@@ -1,0 +1,14 @@
+asyncpg==0.30.0
+email-validator==2.3.0
+fastapi==0.121.2
+fastapi-cli==0.0.16
+fastapi-cloud-cli==0.3.1
+httptools==0.6.4
+jinja2==3.1.6
+pip-chill==1.0.3
+python-dotenv==1.0.1
+python-multipart==0.0.20
+pyyaml==6.0.3
+uvloop==0.22.1
+watchfiles==0.24.0
+websockets==13.1

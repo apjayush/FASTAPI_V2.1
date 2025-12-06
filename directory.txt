@@ -1,0 +1,44 @@
+backend/
+│
+├── app/
+│   ├── main.py                 # FastAPI entry point
+│   ├── config.py               # Environment variables, settings
+│   ├── database.py             # DB connection (SQLAlchemy or async)
+│   ├── deps.py                 # Dependencies
+│   │
+│   ├── routers/                # All API endpoints (routes)
+│   │   ├── whatsapp_webhook.py # WhatsApp incoming webhook
+│   │   ├── messages.py         # Send messages to WhatsApp
+│   │   ├── leads.py            # Lead API
+│   │   ├── slots.py            # Available slots API
+│   │   └── bookings.py         # Appointment booking API
+│   │
+│   ├── services/               # Business logic (no HTTP stuff)
+│   │   ├── whatsapp_service.py # Send msgs, templates, media
+│   │   ├── rasa_service.py     # Forward messages to Rasa
+│   │   ├── lead_service.py     # Lead logic
+│   │   └── booking_service.py  # Booking logic
+│   │
+│   ├── models/                 # SQLAlchemy models
+│   │   ├── lead.py
+│   │   ├── booking.py
+│   │   └── user.py
+│   │
+│   ├── schemas/                # Pydantic request/response models
+│   │   ├── lead.py
+│   │   ├── booking.py
+│   │   └── message.py
+│   │
+│   ├── utils/                  # Helper utilities
+│   │   ├── logger.py
+│   │   ├── time_utils.py
+│   │   └── whatsapp_utils.py
+│   │
+│   └── core/                   # Core infrastructure
+│       ├── security.py         # JWT, auth
+│       ├── config_loader.py
+│       └── exceptions.py
+│
+├── requirements.txt
+├── README.md
+└── .env                        # Tokens, DB credentials
