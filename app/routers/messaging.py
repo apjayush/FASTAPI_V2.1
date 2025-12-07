@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from app.services.whatsapp_service import send_whatsapp_text
 from app.utils.logger import log_message
 from dotenv import load_dotenv
+
 import os
 import httpx
 import asyncio
@@ -17,7 +18,6 @@ router = APIRouter()
 
 class SendMessageRequest(BaseModel):
     to: str
-    message: str
 
 
 class NotifyAgentRequest(BaseModel):
@@ -36,10 +36,17 @@ async def send_message(payload: SendMessageRequest):
     print(f"📞 To: {payload.to}")
     print("=" * 60)
 
+    agent_number = 8529750269
+
+    send_to_customer_msg = f"""*Thanks for reaching out!*
+
+You can connect with our agent directly by clicking here 👇
+https://wa.me/{agent_number}""".strip()
+
     try:
         response = await send_whatsapp_text(
             to=payload.to,
-            message=payload.message
+            message=send_to_customer_msg
         )
         
         log_message(f"✅ Message sent to {payload.to}")
@@ -96,7 +103,7 @@ async def notify_agent(payload: NotifyAgentRequest):
                             },
                             {
                                 "type": "text",
-                                "text": whatsapp_link  # {{3}} - WhatsApp link (e.g., https://wa.me/918529750269)
+                                "text": payload.customer_phone  # {{3}} - WhatsApp link (e.g., https://wa.me/918529750269)
                             }
                         ]
                     }

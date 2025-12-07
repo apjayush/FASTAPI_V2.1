@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from app.db import get_db_connection
+# from app.db import get_db_connection
 from app.services.whatsapp_service import send_whatsapp_text
 from datetime import date
 from dotenv import load_dotenv
@@ -9,12 +9,6 @@ import os
 router = APIRouter()
 
 load_dotenv()
-DB_SCHEMA = os.getenv("DB_SCHEMA", "healthcare").strip()
-# MAX_CAPACITY = int(os.getenv("MAX_CAPACITY", 4))
-# DEFAULT_SLOTS = os.getenv("DEFAULT_SLOTS", "11AM,12PM,1PM").split(",")
-
-# ...existing code...
-
 # --------- TEST RIDE REQUEST MODEL ----------
 class TestRideRequest(BaseModel):
     name: str

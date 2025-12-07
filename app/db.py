@@ -1,27 +1,45 @@
 import asyncpg
-import os
-from dotenv import load_dotenv
+import logging
 
-# Load environment variables
-load_dotenv()
+logger = logging.getLogger(__name__)
 
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_NAME = os.getenv("DB_NAME", "clinic")
-DB_USER = os.getenv("DB_USER", "postgres")
-DB_PASS = os.getenv("DB_PASS", "")
-DB_PORT = int(os.getenv("DB_PORT", 5432))
+_pool = None  # Global pool variable
 
-
-async def get_db_connection():
-    """
-    Returns a new database connection.
-    Call this inside every FastAPI route where DB access is needed.
-    """
-    conn = await asyncpg.connect(
-        host=DB_HOST,
-        user=DB_USER,
-        password=DB_PASS,
-        database=DB_NAME,
-        port=DB_PORT
+async def create_pool():
+    global _pool
+    if _pool:
+        return _pool
+    _pool = await asyncpg.create_pool(
+        user='postgres',
+        password='123',
+        database='automobiles',
+        host='localhost',
+        port=5432,
+        min_size=5,
+        max_size=10
     )
-    return conn
+    if _pool:
+        logger.info("Database connection pool created successfully ✅")
+        return _pool
+    else:
+        logger.error("Failed to create database connection pool ❌")
+        return None
+
+def get_pool():
+    """Return the global connection pool."""
+    return _pool
+
+async def close_pool(pool=None):
+    global _pool
+    if pool is None:
+        pool = _pool
+    if pool:
+        await pool.close()
+        _pool = None
+
+if __name__ == '__main__':
+    async def main():
+        pool = await create_pool()
+        async with pool.acquire() as connection:
+            result = await connection.fetchval('SELECT 1 + 1')
+            print(f"Result of 1 + 1: {result}")
