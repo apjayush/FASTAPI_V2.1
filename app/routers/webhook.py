@@ -55,13 +55,9 @@ async def whatsapp_webhook(request: Request):
             user_msg = msg["text"]["body"]
 
             # NEW: If user says "Hi" or related, insert enquiry
-        if user_msg.lower().strip() in ["hi", "hello", "hey"]:
-            await insert_customer_enquiry(pool, user_phone, interested_in="general_inquiry")  # Customize interested_in
+            if user_msg.lower().strip() in ["hi", "hello", "hey"]:
+                await insert_customer_enquiry(pool, user_phone, interested_in="general_inquiry")  # Customize interested_in
 
-        # NEW: If user provides name (e.g., during booking flow), update name
-        # Assuming Rasa or logic detects name input, e.g., if message looks like a name
-        # elif is_name_input(user_msg):  # Helper to check if it's a name
-        #     await update_customer_name(pool, user_phone, user_msg.strip())
 
             # filter poor message here
             if not is_valid_message(user_msg):
@@ -73,6 +69,7 @@ async def whatsapp_webhook(request: Request):
         # CASE 2: USER CLICKED A BUTTON
         # ---------------------------------------
         elif msg["type"] == "interactive":
+            print("it is interactive")
             interactive = msg["interactive"]
 
             # Button reply

@@ -1,9 +1,10 @@
 from fastapi import FastAPI
-from app.routers import book_test_ride, messaging, send_brochure, send_list, webhook, auth
+from app.admin import dashboard
+from app.auth import auth_router
+from app.routers import book_test_ride, messaging, send_brochure, send_list, webhook
 from app.db import create_pool, close_pool
 from contextlib import asynccontextmanager
-
-# app = FastAPI()
+from fastapi.middleware.cors import CORSMiddleware
 
 
 
@@ -18,10 +19,25 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)  # Single app instance with lifespan
 
 
+origins = [
+    "http://localhost",
+    "http://localhost:8080",
+    "https://incoweb.in",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # include webhook route
 app.include_router(webhook.router)
 app.include_router(send_list.router)
 app.include_router(send_brochure.router)
 app.include_router(book_test_ride.router)
 app.include_router(messaging.router)
-app.include_router(auth.router)
+app.include_router(auth_router.router)
+app.include_router(dashboard.router)

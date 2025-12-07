@@ -1,5 +1,9 @@
 import asyncpg
 import logging
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 
@@ -10,11 +14,11 @@ async def create_pool():
     if _pool:
         return _pool
     _pool = await asyncpg.create_pool(
-        user='postgres',
-        password='123',
-        database='automobiles',
-        host='localhost',
-        port=5432,
+        user=os.getenv('DB_USER', 'postgres'),
+        password=os.getenv('DB_PASSWORD', '123'),
+        database=os.getenv('DB_NAME', 'automobiles'),
+        host=os.getenv('DB_HOST', 'localhost'),
+        port=os.getenv('DB_PORT', 5432),
         min_size=5,
         max_size=10
     )
