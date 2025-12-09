@@ -1,6 +1,7 @@
 import logging
+from app.auth.jwt import get_current_user
 from app.db import get_pool
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pwdlib import PasswordHash
 from pydantic import BaseModel
 import jwt
@@ -16,7 +17,6 @@ load_dotenv()  # ✅ called ONCE
 router = APIRouter()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-print(SECRET_KEY)
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -75,3 +75,17 @@ async def login_user(payload: LoginPayload, response: Response):
             
     else:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database not available")
+    
+
+@router.get("/me")
+def me(user: str = Depends(get_current_user)):
+    """
+    Frontend calls this to check if user is logged in.
+    Returns 200 if valid cookie, 401 otherwise.
+    """
+    return {"email": user}
+
+@router.post("/logout")
+def logout(response: Response):
+    response.delete_cookie("access_token")
+    return {"message": "Logged out"}

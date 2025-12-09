@@ -5,6 +5,7 @@ from app.routers import book_test_ride, messaging, send_brochure, send_list, web
 from app.db import create_pool, close_pool
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
+from app.broadcast import broadcast_router, get_templates
 
 
 
@@ -23,6 +24,8 @@ origins = [
     "http://localhost",
     "http://localhost:8080",
     "https://incoweb.in",
+    # "https://localhost:5173",
+    "http://localhost:5173"
 ]
 
 app.add_middleware(
@@ -41,3 +44,5 @@ app.include_router(book_test_ride.router)
 app.include_router(messaging.router)
 app.include_router(auth_router.router)
 app.include_router(dashboard.router)
+app.include_router(get_templates.router)
+app.include_router(broadcast_router.router)

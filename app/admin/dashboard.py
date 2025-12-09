@@ -26,7 +26,8 @@ async def send_enquiry_data(user_email: str = Depends(get_current_user)):
                 jsonb_agg(
                 jsonb_build_object(
                 'name', name,
-                'number', phone
+                'number', phone,
+                'enquiry_date', DATE(updated_at)
                 )
                 ) as details
                 from customer_enquiry ce ;
