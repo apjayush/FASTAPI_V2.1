@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from app.admin import dashboard
 from app.auth import auth_router
 from app.routers import book_test_ride, messaging, send_brochure, send_list, webhook
+from app.mailer import contact as mailer_contact
 from app.db import create_pool, close_pool
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
@@ -46,3 +47,4 @@ app.include_router(auth_router.router)
 app.include_router(dashboard.router)
 app.include_router(get_templates.router)
 app.include_router(broadcast_router.router)
+app.include_router(mailer_contact.router)
