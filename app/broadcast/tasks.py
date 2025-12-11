@@ -14,15 +14,20 @@ def send_whatsapp_task(
     phone: str,
     template_name: str,
     language: str,
-    parameters: list,
-    campaign_id: str,
+    header_image_url: str,   # <-- NEW
 ):
+    """
+    Celery worker task to send WhatsApp messages.
+    """
+    
+    # Build WhatsApp payload (no body params now)
     payload = build_payload(
         to=phone,
         template_name=template_name,
         language=language,
-        params=parameters,
+        header_image_url=header_image_url,  # <-- NEW
+        body_params=None,                   # <-- No body params anymore
     )
 
-    # Celery is sync → run async function properly
+    # Celery is sync, so we must run async call manually
     asyncio.run(send_to_whatsapp(payload))
