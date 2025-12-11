@@ -60,6 +60,8 @@ async def send_broadcast(
         
         header_image_url = f"https://1eb33ea5a027.ngrok-free.app/{img_path}"
 
+        print("Header image URL:", header_image_url)  # --- IGNORE ---
+
         
     # ------------------------------------------
     # 3️⃣ Send to Celery for each recipient

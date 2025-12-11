@@ -151,6 +151,8 @@ async def create_template(
         with open(local_path, "wb") as f:
             f.write(image_bytes)
 
+        relative_path = f"media/templates/{unique_name}"
+
         # 4) Upload to Meta and get handle
         handle = await upload_image_bytes_to_meta(image_bytes, media.filename)
 
@@ -206,7 +208,7 @@ async def create_template(
                 try:
                     await conn.execute(
                         "INSERT INTO templates (template_id, template_img_path) VALUES ($1, $2)",
-                        template_id, local_path
+                        template_id, relative_path
                     )
                 except Exception as e:
                     print(f"❌ Error saving template media info: {e}")
