@@ -83,7 +83,9 @@ async def create_template(
     footer: Optional[str] = Form(None)
 ):
 
-    if not name.strip() or not body.strip():
+    filtered_name = name.strip().lower().replace(" ", "_")
+
+    if not filtered_name or not body.strip():
         raise HTTPException(status_code=400, detail="Name and body required")
     
     components = [
@@ -109,7 +111,7 @@ async def create_template(
 
 
         payload_for_meta = {
-            "name": name,
+            "name": filtered_name,
             "language": language,
             "category": category,
             "components": components
@@ -175,7 +177,7 @@ async def create_template(
 
         # 7) Build final payload for Meta
         payload_for_meta = {
-            "name": name.strip(),
+            "name": filtered_name,
             "language": language,
             "category": category,
             "components": components

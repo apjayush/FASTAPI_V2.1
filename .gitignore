@@ -30,6 +30,9 @@ venv/
 env/
 ENV/
 
+media/
+./media
+
 # IDEs
 .vscode/
 .idea/
