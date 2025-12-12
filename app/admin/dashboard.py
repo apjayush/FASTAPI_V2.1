@@ -14,7 +14,7 @@ router = APIRouter()
 
 
 @router.get("/dashboard")
-async def send_enquiry_data(user_email: str = Depends(get_current_user)):
+async def send_enquiry_data(current_user = Depends(get_current_user)):
     # today_date = date.today()
     pool = get_pool()
     if pool:

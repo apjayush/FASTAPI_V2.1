@@ -75,3 +75,5 @@ async def send_to_whatsapp(payload: dict):
 
     if response.status_code not in (200, 201):
         raise Exception(response.text)
+    
+    return response.json()

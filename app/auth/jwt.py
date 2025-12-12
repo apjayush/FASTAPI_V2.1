@@ -35,7 +35,7 @@ def get_current_user(request: Request) -> str:
             algorithms=[ALGORITHM],
         )
 
-        print(payload)
+        print("this is payload", payload)
 
         user_identity = payload.get("sub")
         if not user_identity:
@@ -43,8 +43,12 @@ def get_current_user(request: Request) -> str:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid token payload",
             )
+        
+        return {
+            "email": payload.get("sub"),
+            "user_id": payload.get("user_id")  # or payload["user_id"]
+        }
 
-        return user_identity
 
     except jwt.ExpiredSignatureError:
         raise HTTPException(

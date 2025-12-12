@@ -23,8 +23,13 @@ router = APIRouter(prefix="/broadcast", tags=["Broadcast"])
 @router.post("/send", status_code=status.HTTP_202_ACCEPTED)
 async def send_broadcast(
     payload: BroadcastRequest,
-    user_email: str = Depends(get_current_user),
+    current_user = Depends(get_current_user),
 ):
+    print("Current user in broadcast:", current_user)  # --- IGNORE ---
+
+    user_id = current_user["user_id"]
+    print("User ID:", user_id)  # --- IGNORE ---
+
     if not payload.recipients:
         raise HTTPException(
             status_code=400, detail="No recipients provided"
@@ -75,6 +80,7 @@ async def send_broadcast(
             template_name=payload.template_name,
             language=payload.template_language,
             header_image_url=header_image_url,
+            user_id=user_id,
         )
 
     return {

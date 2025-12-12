@@ -57,7 +57,7 @@ async def login_user(payload: LoginPayload, response: Response):
             # Create JWT token
             access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
             access_token = create_access_token(
-                data={"sub": user['email']}, expires_delta=access_token_expires
+                data={"sub": user['email'], "user_id": user['client_id']}, expires_delta=access_token_expires
             )
 
             response.set_cookie(

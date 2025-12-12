@@ -1,7 +1,8 @@
 from app.celery_app import celery_app
 from app.broadcast.broadcast_payload_creator import build_payload, send_to_whatsapp
 import asyncio
-
+import os
+from app.db import get_sync_connection
 
 @celery_app.task(
     bind=True,
@@ -15,6 +16,7 @@ def send_whatsapp_task(
     template_name: str,
     language: str,
     header_image_url: str,   # <-- NEW
+    user_id: int,            # <-- NEW
 ):
     """
     Celery worker task to send WhatsApp messages.
@@ -29,5 +31,46 @@ def send_whatsapp_task(
         body_params=None,                   # <-- No body params anymore
     )
 
-    # Celery is sync, so we must run async call manually
-    asyncio.run(send_to_whatsapp(payload))
+    try:
+        # Celery is sync, so we must run async call manually
+        response_json = asyncio.run(send_to_whatsapp(payload))
+        status = "SUCCESS"
+        error = None
+
+    except Exception as e:
+        status = "FAILED"
+        error = str(e)
+
+    conn = get_sync_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO message_logs 
+            (user_id, phone_number, template_name, status, error_message)
+            VALUES (%s, %s, %s, %s, %s)
+            """,
+            (
+                user_id,
+                phone,
+                template_name,
+                status,
+                error,
+            ),
+        )
+        conn.commit()
+    finally:
+        try:
+            cursor.close()
+        except Exception:
+            pass
+        try:
+            conn.close()
+        except Exception:
+            pass
+
+    return {"status": status, "error": error, "response": response_json}
+
+
+
+    
