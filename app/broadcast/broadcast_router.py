@@ -14,6 +14,7 @@ class BroadcastRequest(BaseModel):
     has_header: bool = False
     template_name: str
     template_language: str
+    header_format: str = "IMAGE"  # Currently only IMAGE supported
 
 
 router = APIRouter(prefix="/broadcast", tags=["Broadcast"])
@@ -40,7 +41,7 @@ async def send_broadcast(
     # ------------------------------------------
     header_image_url = None
 
-    if payload.has_header:
+    if payload.header_format == "IMAGE":
         async with pool.acquire() as conn:
             template = await conn.fetchrow(
                 """
