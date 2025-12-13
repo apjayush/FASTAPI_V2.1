@@ -11,6 +11,7 @@ from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from app.broadcast import broadcast_router, get_templates
 from app.template import create_template
+from app.message_stats import message_count
 
 
 @asynccontextmanager
@@ -61,3 +62,4 @@ app.include_router(get_templates.router)
 app.include_router(broadcast_router.router)
 app.include_router(mailer_contact.router)
 app.include_router(create_template.router)
+app.include_router(message_count.router)
